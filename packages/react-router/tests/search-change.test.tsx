@@ -2,15 +2,17 @@ import { cleanup, render, screen } from '@testing-library/react'
 
 import { afterEach, expect, test, vi } from 'vitest'
 
+import React from 'react'
 import {
   RouterProvider,
   createRootRoute,
   createRoute,
   createRouter,
 } from '../src'
-import React from 'react'
 
 afterEach(() => {
+  vi.resetAllMocks()
+  window.history.replaceState(null, 'root', '/')
   cleanup()
 })
 
@@ -35,6 +37,7 @@ test('route is not reloading on search change if it is not in deps', async () =>
   const routeTree = rootRoute.addChildren([indexRoute])
   const router = createRouter({
     routeTree,
+    defaultStaleTime: Infinity,
   })
 
   render(<RouterProvider router={router} />)
@@ -72,6 +75,7 @@ test('route is reloading on search change if it is in deps', async () => {
   const routeTree = rootRoute.addChildren([indexRoute])
   const router = createRouter({
     routeTree,
+    defaultStaleTime: Infinity,
   })
 
   render(<RouterProvider router={router} />)
